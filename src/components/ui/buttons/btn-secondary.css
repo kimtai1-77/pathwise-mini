@@ -1,0 +1,30 @@
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 4.2rem;
+  padding: 0.9rem 1.6rem;
+  border: 1px solid var(--sc-200);
+  border-radius: 0.5rem;
+  color: var(--sc-700);
+  background: transparent;
+  font: inherit;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: background-color 160ms ease, border-color 160ms ease;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  border-color: var(--sc-300);
+  background: var(--sc-050);
+}
+
+.btn-secondary:focus-visible {
+  outline: 2px solid var(--p-400);
+  outline-offset: 2px;
+}
+
+.btn-secondary:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}

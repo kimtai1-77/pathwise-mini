@@ -1,0 +1,31 @@
+.btn-main {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 4.4rem;
+  width: 100%;
+  padding: 0.9rem 1.6rem;
+  border: 0;
+  border-radius: 0.5rem;
+  color: var(--nt-700);
+  background-color: var(--p-400);
+  font: inherit;
+  font-size: 1.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 160ms ease;
+}
+
+.btn-main:hover {
+  background-color: var(--p-500);
+}
+
+.btn-main:focus-visible {
+  outline: 2px solid var(--p-400);
+  outline-offset: 2px;
+}
+
+.btn-main:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}

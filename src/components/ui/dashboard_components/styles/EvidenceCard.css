@@ -1,0 +1,77 @@
+.pcd-evidence-card {
+  margin-top: 22px;
+  padding: 14px;
+  border: 1px solid var(--sc-100);
+  border-radius: 8px;
+  background: var(--nt-050);
+}
+
+.pcd-evidence-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.pcd-evidence-heading > div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.pcd-evidence-heading strong {
+  overflow-wrap: anywhere;
+  color: var(--sc-700);
+  font-size: 11px;
+}
+
+.pcd-evidence-card > p {
+  margin: 6px 0 0;
+  color: var(--sc-400);
+  font-size: 10px;
+}
+
+.pcd-evidence-card blockquote {
+  margin: 12px 0 0;
+  padding: 9px 11px;
+  border-left: 2px solid var(--p-400);
+  background: var(--sc-050);
+  color: var(--sc-600);
+  font-size: 10px;
+}
+
+.pcd-evidence-state {
+  padding: 4px 7px;
+  border: 1px solid var(--sc-100);
+  border-radius: 16px;
+  color: var(--sc-600);
+  font-size: 9px;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.pcd-evidence-pending_review {
+  border-color: var(--warning-500);
+  background: var(--warning-100);
+  color: var(--warning-500);
+}
+
+.pcd-evidence-approved {
+  border-color: var(--success-500);
+  background: var(--success-100);
+  color: var(--success-500);
+}
+
+.pcd-evidence-rejected,
+.pcd-rejection-note {
+  border-color: var(--error-500);
+  background: var(--error-100);
+  color: var(--error-500);
+}
+
+.pcd-rejection-note {
+  padding: 9px;
+  border: 1px solid;
+  border-radius: 6px;
+}

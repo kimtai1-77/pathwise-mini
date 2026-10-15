@@ -1,0 +1,84 @@
+.pcd-review-message {
+  width: 100%;
+  padding: 11px;
+  border: 1px solid var(--sc-100);
+  border-radius: 7px;
+  color: var(--sc-400);
+  font-size: 11px;
+  text-align: center;
+}
+
+.pcd-danger-button,
+.pcd-secondary-button,
+.pcd-approve-button {
+  display: inline-flex;
+  min-height: 40px;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  padding: 0 14px;
+  border: 1px solid var(--sc-100);
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.pcd-danger-button {
+  border-color: var(--error-500);
+  background: var(--error-100);
+  color: var(--error-500);
+}
+
+.pcd-secondary-button {
+  background: var(--sc-050);
+  color: var(--sc-600);
+}
+
+.pcd-approve-button {
+  border: 0;
+  background: var(--p-300);
+  color: var(--sc-800);
+}
+
+.pcd-approve-button:hover:not(:disabled) {
+  background: var(--p-200);
+}
+
+.pcd-danger-button:disabled,
+.pcd-approve-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.pcd-reject-form {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pcd-reject-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--error-500);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.pcd-reject-form textarea {
+  width: 100%;
+  resize: vertical;
+  padding: 9px;
+  border: 1px solid var(--sc-100);
+  border-radius: 7px;
+  background: var(--nt-050);
+  color: var(--sc-600);
+  font-size: 11px;
+}
+
+.pcd-reject-form > div {
+  display: flex;
+  gap: 9px;
+}

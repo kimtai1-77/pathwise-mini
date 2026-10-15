@@ -1,0 +1,43 @@
+.strategy-percentage {
+  position: relative;
+  --strategy-percentage-size: 96px;
+  width: var(--strategy-percentage-size);
+  height: var(--strategy-percentage-size);
+  flex: 0 0 var(--strategy-percentage-size);
+}
+
+.strategy-percentage svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  transform: rotate(-90deg);
+}
+
+.strategy-percentage circle {
+  fill: none;
+  stroke: var(--sc-100);
+  stroke-width: 3.8;
+  transition: stroke 220ms ease;
+}
+
+.strategy-percentage circle.is-filled {
+  stroke: var(--error-400);
+}
+
+.strategy-percentage-pending_review circle.is-filled {
+  stroke: var(--warning-400);
+}
+
+.strategy-percentage-compliant circle.is-filled {
+  stroke: var(--success-500);
+}
+
+.strategy-percentage span {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--sc-700);
+  font-size: 14px;
+  font-weight: 800;
+}

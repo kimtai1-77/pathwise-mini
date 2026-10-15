@@ -1,0 +1,43 @@
+.pcd-drawer-status {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 5px 12px;
+  padding: 14px;
+  border: 1px solid var(--error-500);
+  border-radius: 8px;
+  background: var(--error-100);
+}
+
+.pcd-drawer-status .pcd-kicker {
+  grid-column: 1 / -1;
+}
+
+.pcd-drawer-status strong {
+  color: var(--error-500);
+  font-size: 13px;
+  text-transform: capitalize;
+}
+
+.pcd-drawer-status small {
+  align-self: center;
+  color: var(--sc-600);
+  font-size: 10px;
+}
+
+.pcd-drawer-status.pcd-status-pending_review {
+  border-color: var(--warning-500);
+  background: var(--warning-100);
+}
+
+.pcd-drawer-status.pcd-status-pending_review strong {
+  color: var(--warning-500);
+}
+
+.pcd-drawer-status.pcd-status-compliant {
+  border-color: var(--success-500);
+  background: var(--success-100);
+}
+
+.pcd-drawer-status.pcd-status-compliant strong {
+  color: var(--success-500);
+}

@@ -1,0 +1,115 @@
+.login-page {
+  box-sizing: border-box;
+  display: grid;
+  min-height: 100svh;
+  width: 100%;
+  place-items: center;
+  padding: 2.4rem 1.6rem;
+  background-color: var(--sc-050);
+  letter-spacing: 0;
+}
+
+.login-wrapper {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 60rem;
+  padding: 2.8rem;
+  text-align: left;
+  background-color: var(--nt-050);
+  border: 1px solid var(--nt-100);
+  border-radius: 0.8rem;
+}
+
+.login-wrapper .card-header {
+  margin-bottom: 2.4rem;
+}
+
+.login-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+.login-forgot {
+  margin: 1.2rem 0 0;
+  font-size: 1.3rem;
+  text-align: right;
+}
+
+.login-forgot a {
+  color: var(--nt-600);
+  text-underline-offset: 0.2em;
+}
+
+.login-forgot a:hover {
+  color: var(--t-500);
+}
+
+.login-forgot a:focus-visible {
+  outline: 2px solid var(--p-400);
+  outline-offset: 2px;
+}
+
+.login-submit {
+  margin-top: 2.4rem;
+}
+
+.login-error {
+  margin: 1.2rem 0 -1.2rem;
+  color: var(--error-400);
+  font-size: 1.3rem;
+}
+
+.login-footer {
+  margin: 1.6rem 0 0;
+  color: var(--nt-800);
+  font-size: 1.3rem;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.login-footer a {
+  color: inherit;
+  text-underline-offset: 0.2em;
+}
+
+.login-footer a:hover {
+  color: var(--t-500);
+}
+
+.login-footer a:focus-visible {
+  outline: 2px solid var(--p-400);
+  outline-offset: 2px;
+}
+
+@media (max-width: 600px) {
+  .login-page {
+    padding: 1.6rem;
+  }
+
+  .login-wrapper {
+    padding: 2rem;
+  }
+
+  .login-wrapper .card-header {
+    margin-bottom: 1.8rem;
+  }
+
+  .login-fields {
+    gap: 1.4rem;
+  }
+
+  .login-forgot {
+    margin-top: 1rem;
+  }
+
+  .login-submit {
+    margin-top: 1.8rem;
+  }
+
+  .login-footer {
+    margin-top: 1.4rem;
+  }
+}

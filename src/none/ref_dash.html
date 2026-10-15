@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pathwise - Security Maturity Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            400: '#2dd4bf',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            800: '#115e59',
+                            900: '#134e4a',
+                            dark: '#0B0F17',
+                            card: '#131B29',
+                            cardHover: '#182335',
+                            border: '#1E293B',
+                            accent: '#38BDF8',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar for modern subtle look */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0B0F17;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1E293B;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+
+        /* Glassmorphic highlights */
+        .glass-panel {
+            background: linear-gradient(135deg, rgba(19, 27, 41, 0.8) 0%, rgba(15, 23, 38, 0.95) 100%);
+            backdrop-filter: blur(12px);
+        }
+
+        /* Segmented Circular Ring animations */
+        .ring-segment {
+            transition: stroke-dasharray 0.6s ease, stroke 0.3s ease;
+        }
+
+        /* Slide drawer animation */
+        .drawer-overlay {
+            transition: opacity 0.3s ease-in-out;
+        }
+        .drawer-content {
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+    </style>
+</head>
+<body class="bg-[#0B0F17] text-slate-200 font-sans min-h-screen antialiased selection:bg-teal-500 selection:text-white">
+
+    <!-- Top Navigation Header -->
+    <header class="border-b border-slate-800/80 bg-[#0B0F17]/90 sticky top-0 z-30 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-teal-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-teal-500/20">
+                    <i data-lucide="shield-check" class="w-6 h-6 text-slate-950 font-bold"></i>
+                </div>
+                <div>
+                    <span class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                        PATHWISE
+                        <span class="text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full bg-teal-500/10 text-teal-400 border border-teal-500/20">Enterprise</span>
+                    </span>
+                    <p class="text-xs text-slate-400">ACSC Essential Eight Compliance Engine</p>
+                </div>
+            </div>
+
+            <!-- Global Level Tabs -->
+            <div class="hidden md:flex items-center bg-slate-900/90 p-1.5 rounded-xl border border-slate-800/80">
+                <button onclick="setGlobalMaturity(1)" id="tab-lvl-1" class="maturity-tab px-4 py-2 text-xs font-semibold rounded-lg transition-all text-slate-400 hover:text-white">
+                    Level 1 Baseline
+                </button>
+                <button onclick="setGlobalMaturity(2)" id="tab-lvl-2" class="maturity-tab px-4 py-2 text-xs font-semibold rounded-lg transition-all text-slate-400 hover:text-white">
+                    Level 2 Target
+                </button>
+                <button onclick="setGlobalMaturity(3)" id="tab-lvl-3" class="maturity-tab px-4 py-2 text-xs font-semibold rounded-lg transition-all text-slate-400 hover:text-white">
+                    Level 3 Advanced
+                </button>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <button class="relative p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors">
+                    <i data-lucide="bell" class="w-5 h-5"></i>
+                    <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-teal-400 rounded-full animate-ping"></span>
+                    <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-teal-400 rounded-full"></span>
+                </button>
+                <div class="h-8 w-px bg-slate-800"></div>
+                <div class="flex items-center space-x-3">
+                    <div class="w-9 h-9 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-xs font-bold text-teal-400">
+                        SO
+                    </div>
+                    <div class="hidden sm:block">
+                        <p class="text-xs font-medium text-slate-200">SecOps Admin</p>
+                        <p class="text-[10px] text-slate-400">pathwise.io</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-8 space-y-8">
+
+        <!-- Executive Summary Banner -->
+        <section class="glass-panel border border-slate-800/80 rounded-2xl p-6 md:p-8 shadow-2xl relative overflow-hidden">
+            <!-- Background Glow -->
+            <div class="absolute -right-16 -top-16 w-80 h-80 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -left-16 -bottom-16 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+                <div class="space-y-2 max-w-2xl">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/80 border border-slate-700 text-xs text-slate-300">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                        Active Assessment Workspace
+                    </div>
+                    <h1 class="text-2xl md:text-3xl font-bold text-white tracking-tight">Security Maturity Scorecard</h1>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        Continuous monitoring against the Essential Eight cybersecurity framework. Track gap analyses, remediation steps, and operational posture in real time.
+                    </p>
+                </div>
+
+                <!-- Global Metric Card -->
+                <div class="flex items-center gap-6 bg-slate-900/80 border border-slate-800 p-5 rounded-2xl w-full sm:w-auto">
+                    <div class="relative flex items-center justify-center">
+                        <svg class="w-24 h-24 transform -rotate-90">
+                            <!-- Outer Track -->
+                            <circle cx="48" cy="48" r="38" stroke="currentColor" stroke-width="7" class="text-slate-800" fill="transparent" />
+                            <!-- Progress ring -->
+                            <circle id="global-score-ring" cx="48" cy="48" r="38" stroke="currentColor" stroke-width="7" 
+                                    stroke-dasharray="238.76" stroke-dashoffset="143" stroke-linecap="round" 
+                                    class="text-teal-400 transition-all duration-1000 ease-out" fill="transparent" />
+                        </svg>
+                        <div class="absolute flex flex-col items-center">
+                            <span id="global-score-val" class="text-2xl font-extrabold text-white">40%</span>
+                            <span class="text-[10px] uppercase tracking-wider text-slate-400">Score</span>
+                        </div>
+                    </div>
+                    <div class="space-y-1">
+                        <span class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Current Maturity</span>
+                        <div class="text-xl font-bold text-white flex items-center gap-2">
+                            Level <span id="current-mat-level" class="text-teal-400">1</span>
+                            <span class="text-xs font-normal text-slate-400">/ 3</span>
+                        </div>
+                        <p id="global-mat-desc" class="text-xs text-slate-400 max-w-[180px]">
+                            Partially compliant with Maturity Level 1 requirements.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filter Controls Bar -->
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+            <div class="flex items-center space-x-3">
+                <h2 class="text-lg font-semibold text-white tracking-tight">Mitigation Strategies</h2>
+                <span id="strategy-count" class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700">8 Controls</span>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <div class="relative flex-1 sm:w-64">
+                    <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input type="text" id="search-input" onkeyup="filterStrategies()" placeholder="Search strategies or gaps..." 
+                        class="w-full pl-10 pr-4 py-2 bg-slate-900 border border-slate-800 rounded-xl text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-teal-500/50 focus:ring-1 focus:ring-teal-500/50 transition-all">
+                </div>
+                <select id="status-filter" onchange="filterStrategies()" class="bg-slate-900 border border-slate-800 text-xs text-slate-300 rounded-xl px-3 py-2 focus:outline-none focus:border-teal-500/50">
+                    <option value="all">All Statuses</option>
+                    <option value="action-needed">Action Needed (<50%)</option>
+                    <option value="in-progress">In Progress (50-80%)</option>
+                    <option value="compliant">Compliant (>80%)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Strategy Rows Section (Clean Spacious Cards) -->
+        <div id="strategies-list" class="space-y-6">
+            <!-- Dynamic rows will be rendered here by JS -->
+        </div>
+
+    </main>
+
+    <!-- Remediation Drawer / Modal -->
+    <div id="drawer-overlay" onclick="closeDrawer()" class="drawer-overlay fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 opacity-0 pointer-events-none transition-opacity duration-300"></div>
+
+    <div id="drawer" class="drawer-content fixed top-0 right-0 h-full w-full max-w-xl bg-[#0f172a] border-l border-slate-800 z-50 shadow-2xl translate-x-full overflow-y-auto flex flex-col">
+        <!-- Drawer Header -->
+        <div class="p-6 border-b border-slate-800 flex items-center justify-between sticky top-0 bg-[#0f172a]/95 backdrop-blur z-10">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 rounded-lg bg-teal-500/10 border border-teal-500/20 text-teal-400">
+                    <i data-lucide="wrench" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h3 id="drawer-title" class="text-base font-bold text-white">Remediation Guide</h3>
+                    <p id="drawer-subtitle" class="text-xs text-slate-400">Step-by-step resolution roadmap</p>
+                </div>
+            </div>
+            <button onclick="closeDrawer()" class="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <!-- Drawer Content Body -->
+        <div class="p-6 space-y-6 flex-1">
+            <!-- Progress Status Banner -->
+            <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-4 flex items-center justify-between">
+                <div>
+                    <span class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Target Objective</span>
+                    <p id="drawer-target" class="text-sm font-semibold text-teal-400 mt-0.5">Achieve Maturity Level 2</p>
+                </div>
+                <div class="text-right">
+                    <span class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Current Gap</span>
+                    <p id="drawer-gap-count" class="text-sm font-bold text-rose-400 mt-0.5">3 Unresolved</p>
+                </div>
+            </div>
+
+            <!-- Interactive Remediation Checklist -->
+            <div>
+                <h4 class="text-xs uppercase tracking-wider text-slate-400 font-semibold mb-3">Action Steps</h4>
+                <div id="drawer-steps-list" class="space-y-3">
+                    <!-- Steps dynamically rendered -->
+                </div>
+            </div>
+
+            <!-- Command & Policy Notes -->
+            <div class="space-y-2">
+                <h4 class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Execution Script / Command Reference</h4>
+                <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 font-mono text-xs text-slate-300 relative group">
+                    <code id="drawer-code-block" class="block whitespace-pre-wrap"># Initiating automated patch verification scan
+Invoke-PathwiseAudit -Strategy "PatchApps" -Level 2</code>
+                    <button onclick="copyCode()" class="absolute top-3 right-3 px-2 py-1 bg-slate-800 hover:bg-slate-700 text-[10px] text-slate-300 rounded border border-slate-700 transition-colors">
+                        Copy
+                    </button>
+                </div>
+            </div>
+
+            <!-- Notes or Docs Link -->
+            <div class="p-4 bg-teal-950/20 border border-teal-800/30 rounded-xl flex items-start gap-3">
+                <i data-lucide="info" class="w-5 h-5 text-teal-400 shrink-0 mt-0.5"></i>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                    Executing these steps will update compliance scores during the next scheduled cycle (or instantly upon clicking <strong class="text-teal-300">Mark Completed</strong>).
+                </p>
+            </div>
+        </div>
+
+        <!-- Drawer Footer Actions -->
+        <div class="p-6 border-t border-slate-800 bg-[#0f172a] sticky bottom-0 flex items-center gap-3">
+            <button onclick="markStrategyResolved()" class="flex-1 py-2.5 px-4 bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-xs rounded-xl shadow-lg shadow-teal-500/20 transition-all flex items-center justify-center gap-2">
+                <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                Mark As Compliant
+            </button>
+            <button onclick="closeDrawer()" class="py-2.5 px-4 bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium text-xs rounded-xl transition-colors">
+                Cancel
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Strategy Dataset representing ACSC Essential Eight
+        const strategiesData = [
+            {
+                id: 'patch-apps',
+                title: 'Patch Applications',
+                category: 'Cyber Threat Prevention',
+                score: 25,
+                level: 1,
+                missing: [
+                    'Critical application patches (Browser, Office, PDF readers) pending > 48 hours.',
+                    'Application vulnerability scanner not configured for automated weekly runs.',
+                    'Outdated third-party software repositories identified on 14 endpoints.'
+                ],
+                remediation: [
+                    'Configure centralized application patch manager (e.g., Intune / SCCM).',
+                    'Deploy missing vendor security updates for web browsers and productivity tools.',
+                    'Automate vulnerability assessment scripts across all domain-joined assets.'
+                ],
+                code: 'Set-PathwisePolicy -Control "PatchApps" -MaxPatchDelayHours 48 -AutoEnforce $true'
+            },
+            {
+                id: 'patch-os',
+                title: 'Patch Operating Systems',
+                category: 'System Hardening',
+                score: 40,
+                level: 1,
+                missing: [
+                    'Missing latest monthly cumulative updates on 3 domain controllers.',
+                    'Unsupported legacy OS versions detected on build server.',
+                    'Automated OS compliance reporting interval exceeds 30 days.'
+                ],
+                remediation: [
+                    'Schedule automated maintenance window for Windows Server & Linux kernels.',
+                    'Isolate or decommission non-compliant legacy OS machines.',
+                    'Enable real-time OS build telemetry reporting.'
+                ],
+                code: 'Update-SystemPatchMatrix -TargetGroup "Servers-Production" -MandateCritical $true'
+            },
+            {
+                id: 'mfa',
+                title: 'Multi-Factor Authentication',
+                category: 'Identity & Access',
+                score: 15,
+                level: 1,
+                missing: [
+                    'MFA not enforced for standard remote access users via VPN.',
+                    'Phishing-resistant MFA (FIDO2/WebAuthn) not required for privileged administrators.',
+                    'Legacy authentication protocols (NTLMv1, Basic Auth) active on mail servers.'
+                ],
+                remediation: [
+                    'Enforce Conditional Access policies requiring MFA for all user logins.',
+                    'Issue hardware security keys to domain admins & cloud tenants.',
+                    'Block legacy authentication protocols across Microsoft Entra / Active Directory.'
+                ],
+                code: 'Set-EntraConditionalAccessPolicy -RequirePhishingResistantMFA -ApplyTo "AllAdmins"'
+            },
+            {
+                id: 'restrict-admin',
+                title: 'Restrict Administrative Privileges',
+                category: 'Identity & Access',
+                score: 60,
+                level: 2,
+                missing: [
+                    'Domain Admin credentials used for standard workstation administration.',
+                    'Privileged service accounts lack automated password rotation.',
+                    'Regular access audits not conducted for tier-0 administrative roles.'
+                ],
+                remediation: [
+                    'Implement Just-In-Time (JIT) and Just-Enough-Administration (JEA) access model.',
+                    'Migrate service accounts to Group Managed Service Accounts (gMSA).',
+                    'Conduct quarterly access certification reviews.'
+                ],
+                code: 'Enable-PrivilegedIdentityManagement -Role "GlobalAdmin" -MaxDurationHours 4'
+            },
+            {
+                id: 'office-macros',
+                title: 'Configure Microsoft Office Macros',
+                category: 'Application Control',
+                score: 85,
+                level: 3,
+                missing: [
+                    'Macros from untrusted internet sources not completely blocked via GPO.',
+                    'Digitally signed macro whitelist requires semi-annual review.'
+                ],
+                remediation: [
+                    'Deploy Group Policy to block macros in files originating from the internet.',
+                    'Ensure only macros signed by trusted enterprise certificates are allowed.'
+                ],
+                code: 'Set-GPOConfiguration -Target "OfficeMacroSecurity" -BlockInternetMacros $true'
+            },
+            {
+                id: 'app-hardening',
+                title: 'User Application Hardening',
+                category: 'System Hardening',
+                score: 50,
+                level: 2,
+                missing: [
+                    'Web browsers allow unauthorized Flash/Java browser extensions.',
+                    'PDF viewers permitted to execute embedded JavaScript payloads.'
+                ],
+                remediation: [
+                    'Disable browser features that run unverified active content.',
+                    'Configure PDF viewers to block JavaScript and child process creation.'
+                ],
+                code: 'Disable-BrowserExtension -ExtensionPolicy "StrictWhitelistOnly"'
+            },
+            {
+                id: 'restrict-os-features',
+                title: 'Restrict Operating System Features',
+                category: 'System Hardening',
+                score: 30,
+                level: 1,
+                missing: [
+                    'Unnecessary PowerShell v2 components enabled on endpoints.',
+                    'SMBv1 protocol active on legacy file share server.'
+                ],
+                remediation: [
+                    'Disable SMBv1 and obsolete PowerShell engines across all images.',
+                    'Restrict command-line interpreter usage for standard non-IT users.'
+                ],
+                code: 'Disable-WindowsOptionalFeature -Online -FeatureName "SMB1Protocol" -NoRestart'
+            },
+            {
+                id: 'daily-backups',
+                title: 'Daily Backups',
+                category: 'Data Protection',
+                score: 90,
+                level: 3,
+                missing: [
+                    'Immutable backup copy not verified for offsite disaster recovery site.'
+                ],
+                remediation: [
+                    'Establish air-gapped or write-once-read-many (WORM) cloud backup policy.',
+                    'Perform monthly automated restore drills to validate integrity.'
+                ],
+                code: 'Test-PathwiseBackupIntegrity -StorageVault "OffsiteWORMVault01"'
+            }
+        ];
+
+        let activeMaturityLevel = 1;
+        let activeStrategyForDrawer = null;
+
+        // Initialize Page
+        window.onload = function() {
+            lucide.createIcons();
+            setGlobalMaturity(1);
+        };
+
+        // Helper to generate a segmented radial SVG ring
+        function renderSegmentedRing(score) {
+            const segments = 12; // 12 distinct segments
+            const radius = 34;
+            const center = 44;
+            const strokeWidth = 6;
+            const filledCount = Math.round((score / 100) * segments);
+            
+            // Color based on percentage
+            let colorClass = 'text-rose-500';
+            if (score >= 80) colorClass = 'text-emerald-400';
+            else if (score >= 50) colorClass = 'text-amber-400';
+
+            let segmentsSvg = '';
+            const circumference = 2 * Math.PI * radius;
+            const segmentArc = circumference / segments;
+            const gap = 3.5; // Gap between segments
+
+            for (let i = 0; i < segments; i++) {
+                const isFilled = i < filledCount;
+                const offset = -(i * segmentArc);
+                const segColor = isFilled ? colorClass : 'text-slate-800';
+
+                segmentsSvg += `
+                    <circle 
+                        cx="${center}" 
+                        cy="${center}" 
+                        r="${radius}" 
+                        fill="none" 
+                        stroke="currentColor" 
+                        stroke-width="${strokeWidth}" 
+                        stroke-dasharray="${segmentArc - gap} ${circumference - (segmentArc - gap)}" 
+                        stroke-dashoffset="${offset}" 
+                        class="${segColor} transition-all duration-500" 
+                    />
+                `;
+            }
+
+            return `
+                <div class="relative w-20 h-20 flex items-center justify-center shrink-0">
+                    <svg class="w-full h-full transform -rotate-90">
+                        ${segmentsSvg}
+                    </svg>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                        <span class="text-sm font-extrabold text-white">${score}%</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStrategies() {
+            const container = document.getElementById('strategies-list');
+            const searchVal = document.getElementById('search-input').value.toLowerCase();
+            const statusFilter = document.getElementById('status-filter').value;
+
+            const filtered = strategiesData.filter(item => {
+                const matchesSearch = item.title.toLowerCase().includes(searchVal) || 
+                                     item.missing.some(m => m.toLowerCase().includes(searchVal));
+                
+                let matchesStatus = true;
+                if (statusFilter === 'action-needed') matchesStatus = item.score < 50;
+                else if (statusFilter === 'in-progress') matchesStatus = item.score >= 50 && item.score < 80;
+                else if (statusFilter === 'compliant') matchesStatus = item.score >= 80;
+
+                return matchesSearch && matchesStatus;
+            });
+
+            document.getElementById('strategy-count').innerText = `${filtered.length} Controls`;
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="glass-panel border border-slate-800 rounded-2xl p-12 text-center text-slate-400">
+                        <i data-lucide="shield-alert" class="w-10 h-10 mx-auto text-slate-600 mb-3"></i>
+                        <p class="text-base font-semibold text-slate-300">No matching mitigation strategies found</p>
+                        <p class="text-xs text-slate-500 mt-1">Try tweaking your search term or filter parameters.</p>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            container.innerHTML = filtered.map(strategy => {
+                const ringMarkup = renderSegmentedRing(strategy.score);
+
+                // Gap analysis bullet items
+                const missingList = strategy.missing.map(m => `
+                    <li class="flex items-start gap-2 text-xs text-slate-300 leading-relaxed">
+                        <span class="w-1.5 h-1.5 rounded-full bg-rose-400/80 mt-1.5 shrink-0"></span>
+                        <span>${m}</span>
+                    </li>
+                `).join('');
+
+                // Remediation summary list items
+                const fixList = strategy.remediation.map(r => `
+                    <li class="flex items-start gap-2 text-xs text-slate-400 leading-relaxed">
+                        <span class="w-1.5 h-1.5 rounded-full bg-teal-400/80 mt-1.5 shrink-0"></span>
+                        <span>${r}</span>
+                    </li>
+                `).join('');
+
+                return `
+                    <!-- Row Card with Hostinger-style generous padding & room -->
+                    <div class="glass-panel border border-slate-800/90 hover:border-slate-700/80 rounded-2xl p-6 md:p-8 transition-all duration-300 hover:shadow-xl group relative overflow-hidden">
+                        
+                        <!-- Main Flex Layout - Completely Open (No vertical subdivision grids) -->
+                        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+                            
+                            <!-- Left: Strategy Header & Segmented Radial Gauge -->
+                            <div class="flex items-center gap-6 min-w-[260px] shrink-0">
+                                ${ringMarkup}
+                                <div class="space-y-1">
+                                    <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-slate-800/80 border border-slate-700/60 text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
+                                        Level ${strategy.level} Req
+                                    </div>
+                                    <h3 class="text-lg font-bold text-white group-hover:text-teal-400 transition-colors tracking-tight">
+                                        ${strategy.title}
+                                    </h3>
+                                    <p class="text-xs text-slate-400">${strategy.category}</p>
+                                </div>
+                            </div>
+
+                            <!-- Middle Section: What's Missing (Gap Analysis) -->
+                            <div class="flex-1 space-y-2 min-w-0">
+                                <div class="flex items-center gap-2 text-xs font-semibold text-rose-400 uppercase tracking-wider">
+                                    <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>
+                                    What's Missing
+                                </div>
+                                <ul class="space-y-1.5 max-h-36 overflow-y-auto pr-2">
+                                    ${missingList}
+                                </ul>
+                            </div>
+
+                            <!-- Right Section: How to Fix & Action Trigger -->
+                            <div class="flex-1 space-y-3 min-w-0 flex flex-col justify-between h-full w-full lg:w-auto">
+                                <div>
+                                    <div class="flex items-center gap-2 text-xs font-semibold text-teal-400 uppercase tracking-wider mb-2">
+                                        <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+                                        How to Fix
+                                    </div>
+                                    <ul class="space-y-1.5 max-h-32 overflow-y-auto pr-2">
+                                        ${fixList}
+                                    </ul>
+                                </div>
+
+                                <!-- Integrated Fix Action Button placed smoothly at bottom right -->
+                                <div class="pt-2 flex justify-end">
+                                    <button onclick="openRemediationDrawer('${strategy.id}')" 
+                                        class="inline-flex items-center gap-2 px-5 py-2.5 bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-xs rounded-xl shadow-lg shadow-teal-500/15 hover:shadow-teal-500/30 transition-all transform active:scale-95">
+                                        <span>Start Fix</span>
+                                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            lucide.createIcons();
+        }
+
+        // Filter strategies based on global maturity tab
+        function setGlobalMaturity(level) {
+            activeMaturityLevel = level;
+            
+            // Update active tab styles
+            document.querySelectorAll('.maturity-tab').forEach((tab, idx) => {
+                if (idx + 1 === level) {
+                    tab.className = "maturity-tab px-4 py-2 text-xs font-bold rounded-lg transition-all bg-teal-500 text-slate-950 shadow-md shadow-teal-500/20";
+                } else {
+                    tab.className = "maturity-tab px-4 py-2 text-xs font-semibold rounded-lg transition-all text-slate-400 hover:text-white hover:bg-slate-800/50";
+                }
+            });
+
+            // Recalculate score based on current level threshold
+            const totalScore = strategiesData.reduce((acc, curr) => acc + curr.score, 0);
+            const avgScore = Math.round(totalScore / strategiesData.length);
+
+            document.getElementById('global-score-val').innerText = `${avgScore}%`;
+            document.getElementById('current-mat-level').innerText = level;
+            
+            // Update circular ring offset (Circumference ~ 238.76)
+            const ring = document.getElementById('global-score-ring');
+            const offset = 238.76 - (238.76 * avgScore) / 100;
+            ring.style.strokeDashoffset = offset;
+
+            document.getElementById('global-mat-desc').innerText = 
+                `Enforcing Maturity Level ${level} mitigation policies across endpoints.`;
+
+            renderStrategies();
+        }
+
+        function filterStrategies() {
+            renderStrategies();
+        }
+
+        function openRemediationDrawer(id) {
+            const strategy = strategiesData.find(s => s.id === id);
+            if (!strategy) return;
+
+            activeStrategyForDrawer = strategy;
+
+            document.getElementById('drawer-title').innerText = strategy.title;
+            document.getElementById('drawer-subtitle').innerText = `${strategy.category} • Current Level: ${strategy.level}`;
+            document.getElementById('drawer-target').innerText = `Target: Maturity Level ${Math.min(strategy.level + 1, 3)}`;
+            document.getElementById('drawer-gap-count').innerText = `${strategy.missing.length} Gaps Outstanding`;
+            document.getElementById('drawer-code-block').innerText = strategy.code;
+
+            // Render interactive steps
+            const stepsContainer = document.getElementById('drawer-steps-list');
+            stepsContainer.innerHTML = strategy.remediation.map((step, idx) => `
+                <label class="flex items-start gap-3 p-3 bg-slate-900 border border-slate-800 rounded-xl cursor-pointer hover:border-slate-700 transition-colors">
+                    <input type="checkbox" class="mt-0.5 rounded border-slate-700 text-teal-500 focus:ring-teal-500 bg-slate-950 w-4 h-4">
+                    <div class="space-y-0.5">
+                        <span class="text-xs font-medium text-slate-200 block">${step}</span>
+                        <span class="text-[10px] text-slate-400">Step ${idx + 1} verification step</span>
+                    </div>
+                </label>
+            `).join('');
+
+            // Open Drawer
+            const overlay = document.getElementById('drawer-overlay');
+            const drawer = document.getElementById('drawer');
+
+            overlay.classList.remove('pointer-events-none', 'opacity-0');
+            drawer.classList.remove('translate-x-full');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDrawer() {
+            const overlay = document.getElementById('drawer-overlay');
+            const drawer = document.getElementById('drawer');
+
+            overlay.classList.add('opacity-0', 'pointer-events-none');
+            drawer.classList.add('translate-x-full');
+            document.body.style.overflow = '';
+        }
+
+        function markStrategyResolved() {
+            if (activeStrategyForDrawer) {
+                activeStrategyForDrawer.score = 100;
+                activeStrategyForDrawer.missing = ['All identified vulnerabilities mitigated. Strategy fully compliant.'];
+                setGlobalMaturity(activeMaturityLevel);
+                closeDrawer();
+            }
+        }
+
+        function copyCode() {
+            const codeText = document.getElementById('drawer-code-block').innerText;
+            navigator.clipboard.writeText(codeText);
+            
+            // Brief visual notification
+            const copyBtn = event.currentTarget;
+            const orig = copyBtn.innerText;
+            copyBtn.innerText = 'Copied!';
+            copyBtn.classList.add('text-teal-400');
+            setTimeout(() => {
+                copyBtn.innerText = orig;
+                copyBtn.classList.remove('text-teal-400');
+            }, 1800);
+        }
+    </script>
+</body>
+</html>

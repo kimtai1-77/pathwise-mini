@@ -29,3 +29,26 @@
   cursor: not-allowed;
   opacity: 0.6;
 }
+
+.btn-main.btn-small,
+.btn-main.btn-medium,
+.btn-main.btn-large {
+  flex: 0 0 auto;
+  min-height: 0;
+  padding: 0 1.6rem;
+}
+
+.btn-main.btn-small {
+  width: 12rem;
+  height: 3.2rem;
+}
+
+.btn-main.btn-medium {
+  width: 16rem;
+  height: 4.2rem;
+}
+
+.btn-main.btn-large {
+  width: 20rem;
+  height: 5rem;
+}

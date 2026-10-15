@@ -4,10 +4,10 @@
   justify-content: center;
   min-height: 4.2rem;
   padding: 0.9rem 1.6rem;
-  border: 1px solid var(--sc-200);
-  border-radius: 0.5rem;
-  color: var(--sc-700);
-  background: transparent;
+  border: 1px solid var(--nt-400);
+  border-radius: 0.7rem;
+  color: var(--sc-800);
+  background: var(--nt-50);
   font: inherit;
   font-size: 1.4rem;
   cursor: pointer;
@@ -15,8 +15,8 @@
 }
 
 .btn-secondary:hover:not(:disabled) {
-  border-color: var(--sc-300);
-  background: var(--sc-050);
+  border-color: var(--nt-400);
+  background: var(--nt-100);
 }
 
 .btn-secondary:focus-visible {
@@ -27,4 +27,27 @@
 .btn-secondary:disabled {
   cursor: not-allowed;
   opacity: 0.6;
+}
+
+.btn-secondary.btn-small,
+.btn-secondary.btn-medium,
+.btn-secondary.btn-large {
+  flex: 0 0 auto;
+  min-height: 0;
+  padding: 0 1.6rem;
+}
+
+.btn-secondary.btn-small {
+  width: 12rem;
+  height: 3.2rem;
+}
+
+.btn-secondary.btn-medium {
+  width: 16rem;
+  height: 4.2rem;
+}
+
+.btn-secondary.btn-large {
+  width: 20rem;
+  height: 5rem;
 }
